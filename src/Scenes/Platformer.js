@@ -6,9 +6,9 @@ class Platformer extends Phaser.Scene {
     init() {
         // variables and settings
         this.ACCELERATION = 500;
-        this.DRAG = 700;    // DRAG < ACCELERATION = icy slide
-        this.physics.world.gravity.y = 1500;
-        this.JUMP_VELOCITY = -900;
+        this.DRAG = 1500;    // DRAG < ACCELERATION = icy slide
+        this.physics.world.gravity.y = 1800;
+        this.JUMP_VELOCITY = -700;
     }
 
     create() {
@@ -51,29 +51,34 @@ class Platformer extends Phaser.Scene {
     update() {
         if(cursors.left.isDown) {
             // TODO: have the player accelerate to the left
-            
+            my.sprite.player.body.setAccelerationX(-this.ACCELERATION);
+
             my.sprite.player.resetFlip();
             my.sprite.player.anims.play('walk', true);
 
         } else if(cursors.right.isDown) {
             // TODO: have the player accelerate to the right
+            my.sprite.player.body.setAccelerationX(this.ACCELERATION);
 
             my.sprite.player.setFlip(true, false);
             my.sprite.player.anims.play('walk', true);
 
         } else {
             // TODO: set acceleration to 0 and have DRAG take over
-
+            my.sprite.player.body.setAccelerationX(0);
+            my.sprite.player.body.setDragX(this.DRAG);
             my.sprite.player.anims.play('idle');
         }
 
         // player jump
         // note that we need body.blocked rather than body.touching b/c the former applies to tilemap tiles and the latter to the "ground"
         if(!my.sprite.player.body.blocked.down) {
+            
             my.sprite.player.anims.play('jump');
         }
         if(my.sprite.player.body.blocked.down && Phaser.Input.Keyboard.JustDown(cursors.up)) {
             // TODO: set a Y velocity to have the player "jump" upwards (negative Y direction)
+            my.sprite.player.body.setVelocityY(this.JUMP_VELOCITY);
 
         }
     }
